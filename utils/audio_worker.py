@@ -4,7 +4,8 @@ import subprocess
 import logging
 
 class AudioWorker():
-    """ Object class to work with Telegram audio data
+    """
+    Object class to work with Telegram audio data
     and prepare it for predictive model.
     """
     def __init__(self):
@@ -46,15 +47,28 @@ class AudioWorker():
                             self._mfcc(self.data, self.sr)))
         return result
 
-    def fit(self, path):
+    def fit(self, path: str) -> np.ndarray:
+        """
+        Fit object of AudioWorker class to feature vector using three main features: ''zero crossing rate,
+        RMS and MFCC''.
+        * Firstly, gotten audio converts to compatible format (in this case, .ogg).
+        * Next, converts from audio to data and sample_rate, using librosa library.
+        * Then apply functions for calculating
+        needed features and contstruct the feature vector, which Predictor class can use.
+        :param path: path to root voice file
+        :return: feature vector of ndarray.
+        """
+        # Converts file to compatible format (like .ogg)
         self._convert_file(path)
         logging.info(f"Get voice from {path}")
 
+        # Loading data from converted file for generating of feature vector
         data, sr = librosa.load(self.path)
         self._set_data(data)
         self._set_sr(sr)
         logging.info(f"Data has been loaded from voice.")
 
+        # Extracting features from audio and generating the feature vector
         feature_vector = self._extract_features_from_data()
         return feature_vector
 
