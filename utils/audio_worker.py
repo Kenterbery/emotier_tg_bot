@@ -27,15 +27,15 @@ class AudioWorker():
         path_to_converted_file = path.partition(".oga")[0] + ".ogg"
         self._set_path(path_to_converted_file)
 
-    def _zcr(data, frame_length=2048, hop_length=512):
+    def _zcr(self, data, frame_length=2048, hop_length=512):
         zcr = librosa.feature.zero_crossing_rate(y=data, frame_length=frame_length, hop_length=hop_length)
         return np.squeeze(zcr)
 
-    def _rmse(data, frame_length=2048, hop_length=512):
+    def _rmse(self, data, frame_length=2048, hop_length=512):
         rmse = librosa.feature.rms(y=data, frame_length=frame_length, hop_length=hop_length)
         return np.squeeze(rmse)
 
-    def _mfcc(data, sr, flatten: bool = True):
+    def _mfcc(self, data, sr, flatten: bool = True):
         mfcc_feature = librosa.feature.mfcc(y=data, sr=sr)
         return np.ravel(mfcc_feature.T) if flatten else np.squeeze(mfcc_feature.T)
 

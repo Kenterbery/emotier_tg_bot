@@ -16,5 +16,6 @@ docs/_build/
 profile_default/
 ipython_config.py
 
-token.txt
+*.ogg
+*.oga
 
