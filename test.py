@@ -2,6 +2,8 @@ import telegram
 from decouple import config
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
+import librosa
+import subprocess
 
 TOKEN = config("TOKEN")
 
@@ -13,7 +15,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 
 def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please, talk to me!")
+    text = """I'm a Emotier - bot, which can recognize your emotion by voice message. Please, send me a one!"""
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text)
 
 
 def echo(update, context):
@@ -21,11 +24,24 @@ def echo(update, context):
 
 
 def voice_reply(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="I'd receive your voice, thanks! Start processing...")
+
+    file = context.bot.get_file(update.message.voice.file_id)
+    file_path = file.file_path.rsplit("/", 1)[-1]
+    file.download()
+
+    process = subprocess.run(["ftransc", "-f", "ogg", file_path])
+    file_path = file_path.partition(".oga")[0] + ".ogg"
+
+    data, sr = librosa.load(file_path)
+    print(len(data))
+
     context.bot.send_message(chat_id=update.effective_chat.id, text="I'd receive your voice, thanks!")
+
 
 start_handler = CommandHandler("start", start)
 echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-voice_handler = MessageHandler(Filters.voice, voice_reply)
+voice_handler = MessageHandler(Filters.voice | Filters.audio, voice_reply)
 
 dispatcher.add_handler(start_handler)
 dispatcher.add_handler(echo_handler)
