@@ -2,10 +2,9 @@ import numpy as np
 import librosa
 import subprocess
 import logging
+from settings.constants import LENGTH
 
 class AudioWorker():
-
-    LENGTH = 55125
 
     """
     Object class to work with Telegram audio data
@@ -69,13 +68,13 @@ class AudioWorker():
         data, sr = librosa.load(self.path, duration=2.5, offset=0.6)
 
         # Bring data to trained shape
-        diff = AudioWorker.LENGTH - len(data)
+        diff = LENGTH - len(data)
         if diff > 0:
             data = np.append(data, np.zeros((diff, )))
         else:
-            data = data[:AudioWorker.LENGTH]
+            data = data[:LENGTH]
         print(len(data))
-        assert len(data) == AudioWorker.LENGTH
+        assert len(data) == LENGTH
 
         self._set_data(data)
         self._set_sr(sr)
