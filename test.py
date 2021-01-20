@@ -3,7 +3,8 @@ import logging
 from decouple import config
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-from utils import AudioWorker
+from utils import AudioWorker, FeatureExtractor, Predictor
+import numpy as np
 
 TOKEN = config("TOKEN")
 
@@ -33,7 +34,16 @@ def voice_reply(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="I'd receive your voice, thanks! Start processing...")
     file_path = download_file(context.bot.get_file(update.message.voice.file_id))
     feature_vector = AudioWorker().fit(file_path)
-    context.bot.send_message(chat_id=update.effective_chat.id, text="I'd receive your voice, thanks!")
+    fx = FeatureExtractor()
+    feature_vector = fx.fit_transform(feature_vector)
+    predictor = Predictor()
+    out = dict(zip(("neutral", "positive", "sad"), predictor.predict(feature_vector)))
+
+    output="Oh! I know... Your emotion is:\n"
+    for k, v in sorted(out.items(), key=lambda x: x[1], reverse=True):
+        output += f"- in {100*v:.2f}% is {k.upper()}\n"
+    output += "Am i right? :)"
+    context.bot.send_message(chat_id=update.effective_chat.id, text=output)
 
 
 start_handler = CommandHandler("start", start)

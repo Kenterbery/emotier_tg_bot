@@ -65,7 +65,7 @@ class AudioWorker():
         logging.info(f"Get voice from {path}")
 
         # Loading data from converted file for generating of feature vector
-        data, sr = librosa.load(self.path, duration=2.5, offset=0.6)
+        data, sr = librosa.load(self.path, duration=2.5)
 
         # Bring data to trained shape
         diff = LENGTH - len(data)
