@@ -4,6 +4,9 @@ import subprocess
 import logging
 
 class AudioWorker():
+
+    LENGTH = 55125
+
     """
     Object class to work with Telegram audio data
     and prepare it for predictive model.
@@ -63,7 +66,16 @@ class AudioWorker():
         logging.info(f"Get voice from {path}")
 
         # Loading data from converted file for generating of feature vector
-        data, sr = librosa.load(self.path)
+        data, sr = librosa.load(self.path, duration=2.5, offset=0.6)
+
+        # Bring data to trained shape
+        diff = AudioWorker.LENGTH - len(data)
+        if diff > 0:
+            data = np.append(np.zeros((diff, )))
+        else:
+            data = data[:AudioWorker.LENGTH]
+        assert data.shape[0] != AudioWorker.LENGTH
+
         self._set_data(data)
         self._set_sr(sr)
         logging.info(f"Data has been loaded from voice.")

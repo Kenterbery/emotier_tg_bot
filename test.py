@@ -25,7 +25,8 @@ def start(update, context):
 
 
 def echo(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+    logging.info(update.message.text)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text )
 
 
 def voice_reply(update, context):
@@ -33,7 +34,6 @@ def voice_reply(update, context):
     file_path = download_file(context.bot.get_file(update.message.voice.file_id))
     feature_vector = AudioWorker().fit(file_path)
     print(feature_vector.shape)
-    # TODO: What's wrong with shape? Different voices - different shapes (i.e. (1760,), (2376,))
     context.bot.send_message(chat_id=update.effective_chat.id, text="I'd receive your voice, thanks!")
 
 
