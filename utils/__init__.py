@@ -1,1 +1,2 @@
-from .audio_worker import AudioWorker
+from .audioworker import AudioWorker
+from .featureextractor import FeatureExtractor
