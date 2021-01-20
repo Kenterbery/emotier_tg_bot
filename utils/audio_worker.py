@@ -71,10 +71,11 @@ class AudioWorker():
         # Bring data to trained shape
         diff = AudioWorker.LENGTH - len(data)
         if diff > 0:
-            data = np.append(np.zeros((diff, )))
+            data = np.append(data, np.zeros((diff, )))
         else:
             data = data[:AudioWorker.LENGTH]
-        assert data.shape[0] != AudioWorker.LENGTH
+        print(len(data))
+        assert len(data) == AudioWorker.LENGTH
 
         self._set_data(data)
         self._set_sr(sr)
