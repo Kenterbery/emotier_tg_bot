@@ -46,4 +46,4 @@ class Predictor:
         self.model.set_weights(self.weights)
 
     def predict(self, feature_vector):
-        return np.squeeze(self.model.predict(feature_vector))
+        return dict(zip(('angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise'), np.squeeze(self.model.predict(feature_vector))))
