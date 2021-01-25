@@ -41,7 +41,7 @@ class Predictor:
         self.model.add(layers.Flatten())
         self.model.add(layers.Dense(512, activation='relu'))
         self.model.add(layers.BatchNormalization())
-        self.model.add(layers.Dense(3, activation="softmax"))
+        self.model.add(layers.Dense(7, activation="softmax"))
 
         self.model.set_weights(self.weights)
 
