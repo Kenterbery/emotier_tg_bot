@@ -1,4 +1,5 @@
 import logging
+import os
 
 from decouple import config
 from telegram import Update
@@ -61,6 +62,9 @@ def cancel(update: Update, context: CallbackContext) -> int:
 
 def main() -> None:
     TOKEN = config("TOKEN")
+    NAME = config("NAME")
+
+    PORT = os.environ.get("PORT")
 
     updater = Updater(token=TOKEN)
     dispatcher = updater.dispatcher
@@ -75,9 +79,10 @@ def main() -> None:
     dispatcher.add_handler(voice_handler)
     dispatcher.add_handler(cancel_handler)
 
-
-    updater.start_polling()
-
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path=TOKEN)
+    updater.bot.setWebhook(f"https://{NAME}.herokuapp.com/{TOKEN}")
     updater.idle()
 
 
