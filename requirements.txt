@@ -27,7 +27,6 @@ Keras==2.4.3
 Keras-Preprocessing==1.1.2
 librosa==0.8.0
 llvmlite==0.35.0
-logging==0.4.9.6
 Markdown==3.3.3
 mutagen==1.45.1
 numba==0.52.0
