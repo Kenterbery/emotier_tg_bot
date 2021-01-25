@@ -50,7 +50,7 @@ def voice_reply(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text=output)
 
 
-def cancel(update: Update, context: CallbackContext) -> int:
+def cancel(update: Update) -> int:
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
     update.message.reply_text(

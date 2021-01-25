@@ -1,15 +1,18 @@
-import numpy as np
-import librosa
-import subprocess
 import logging
+import subprocess
+
+import librosa
+import numpy as np
+
 from settings.constants import LENGTH
 
-class AudioWorker():
 
+class AudioWorker:
     """
     Object class to work with Telegram audio data
     and prepare it for predictive model.
     """
+
     def __init__(self):
         self.path = None
         self.data = None
@@ -25,19 +28,22 @@ class AudioWorker():
         self.sr = sr
 
     def _convert_file(self, path):
-        process = subprocess.run(["ftransc", "-f", "ogg", path])
+        subprocess.run(["ftransc", "-f", "ogg", path])
         path_to_converted_file = path.partition(".oga")[0] + ".ogg"
         self._set_path(path_to_converted_file)
 
-    def _zcr(self, data, frame_length=2048, hop_length=512):
+    @staticmethod
+    def _zcr(data, frame_length=2048, hop_length=512):
         zcr = librosa.feature.zero_crossing_rate(y=data, frame_length=frame_length, hop_length=hop_length)
         return np.squeeze(zcr)
 
-    def _rmse(self, data, frame_length=2048, hop_length=512):
+    @staticmethod
+    def _rmse(data, frame_length=2048, hop_length=512):
         rmse = librosa.feature.rms(y=data, frame_length=frame_length, hop_length=hop_length)
         return np.squeeze(rmse)
 
-    def _mfcc(self, data, sr, flatten: bool = True):
+    @staticmethod
+    def _mfcc(data, sr, flatten: bool = True):
         mfcc_feature = librosa.feature.mfcc(y=data, sr=sr)
         return np.ravel(mfcc_feature.T) if flatten else np.squeeze(mfcc_feature.T)
 
@@ -70,7 +76,7 @@ class AudioWorker():
         # Bring data to trained shape
         diff = LENGTH - len(data)
         if diff > 0:
-            data = np.append(data, np.zeros((diff, )))
+            data = np.append(data, np.zeros((diff,)))
         else:
             data = data[:LENGTH]
         print(len(data))
@@ -83,9 +89,3 @@ class AudioWorker():
         # Extracting features from audio and generating the feature vector
         feature_vector = self._extract_features_from_data()
         return feature_vector
-
-
-
-
-
-

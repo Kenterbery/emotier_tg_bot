@@ -1,8 +1,9 @@
-from keras import models
+import numpy as np
 from keras import layers
+from keras import models
+
 from settings.constants import SAVED_ESTIMATOR
 from .metrics import f1_m
-import numpy as np
 
 
 class Predictor:

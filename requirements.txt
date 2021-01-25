@@ -70,3 +70,5 @@ Werkzeug==1.0.1
 wrapt==1.12.1
 youtube-dl==2021.1.16
 zipp==3.4.0
+
+logging~=0.4.9.6
